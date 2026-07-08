@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 // PWA: register the service worker for offline use. Production only, so it
 // never interferes with the Vite dev server / HMR. BASE_URL keeps it correct
-// under the GitHub Pages sub-path (/kialculator/).
+// under the GitHub Pages sub-path (/kalculator/).
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   const base = import.meta.env.BASE_URL
   window.addEventListener('load', () => {
