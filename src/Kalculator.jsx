@@ -273,6 +273,13 @@ function HelpOverlay({ onClose }) {
 }
 
 
+// Display labels for keypad values whose action name differs from the glyph we
+// want to show on the (narrow) 5-column keys. The action value itself is unchanged.
+const KEY_LABEL = {
+  "1/x": "⬚⁻¹", sq: "⬚²", cube: "⬚³", sqrt: "√⬚", cbrt: "³√⬚",
+  log2: "log₂", median: "med", variance: "var",
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════════════════════════════════════
@@ -407,6 +414,21 @@ export default function Kalculator() {
     });
   }
 
+  // x² / x³ convenience: wrap the preceding operand as the base of a sup with a
+  // pre-filled exponent, then sit just after it (unlike ^, which opens an empty
+  // exponent box for you to type into).
+  function insertPow(nStr) {
+    mutate((tree, cur) => {
+      const seq = findSeq(tree, cur.seqId);
+      if (!seq) return;
+      const { nodes, start } = extractPrecedingOperand(seq, cur.pos);
+      const sup = mkSup(mkSeq(nodes), mkSeq([...nStr].map(mkChar)));
+      seq.children.splice(start, 0, sup);
+      if (nodes.length) { setCursorSeqId(seq.id); setCursorPos(start + 1); }
+      else { setCursorSeqId(sup.base.id); setCursorPos(0); }
+    });
+  }
+
   function doBackspace() {
     mutate((tree, cur) => {
       const seq = findSeq(tree, cur.seqId);
@@ -512,8 +534,9 @@ export default function Kalculator() {
     if (val === "(") { insertStructural("paren"); return; }
     if (val === ")") { navigateOut(); return; }
     const funcNames = ["sin","cos","tan","asin","acos","atan","sinh","cosh","tanh","log","ln","log2","abs","exp",
+      "cot","sec","coth","sech","acot","asec","asinh","acosh","atanh","acoth","asech", // extended trig / hyperbolic
       "gcd","lcm","min","max","nCr","nPr","mod","logb",            // multi-arg (commas in the single arg seq)
-      "mean","median","std","variance","sum"];                      // statistics (variadic)
+      "mean","median","std","variance","sum","mode"];               // statistics (variadic; mode → array result)
     if (funcNames.includes(val)) { insertStructural("func", val); return; }
     insertChar(val);
   }
@@ -572,20 +595,28 @@ export default function Kalculator() {
   // CALC mode shows the imaginary unit `i`; SOLVE/GRAPH show the variable `x`.
   const xi = mode === "calc" ? "i" : "x";
   const layouts = [
-    [["sin","cos","tan","^"],["(",")","sqrt","%"],["log","ln",xi,"!"],["⇧","1/x","π","e"]],
-    [["asin","acos","atan","^"],["sinh","cosh","tanh","%"],["log2","exp","abs","!"],["⇧","cbrt","π","e"]],
-    [["gcd","lcm","mod","logb"],["min","max","nCr","nPr"],["mean","median","std","variance"],["sum","(",")",","],["⇧",xi,"π","e"]],
+    [["1/x","sq","cube","sqrt","cbrt"],["exp","ln","log","log2","logb"],["sin","cos","tan","cot","sec"],["⇧",xi,"π","(",")"]],
+    [["gcd","lcm","nCr","nPr","mod"],["abs","min","max","sum","mean"],["mode","median","std","variance",","],["⇧",xi,"π","(",")"]],
+    [["asin","acos","atan","acot","asec"],["sinh","cosh","tanh","coth","sech"],["asinh","acosh","atanh","acoth","asech"],["⇧",xi,"π","(",")"]],
   ];
   const mainKeys = layouts[layer];
-  const numKeys = [["7","8","9","÷"],["4","5","6","×"],["1","2","3","−"],["0",".","=","+"]];
+  const numKeys = [["7","8","9","÷","^"],["4","5","6","×","%"],["1","2","3","−","!"],["0",".","=","+","E"]];
   const keyMap = {"÷":"/","×":"*","−":"-","⇧":null};
 
   const handleBtnPress = (k) => {
-    if (k === "⇧") { setLayer(l => (l + 1) % 3); return; }
     if (k === "1/x") { insertReciprocal(); return; }
+    if (k === "sq") { insertPow("2"); return; }
+    if (k === "cube") { insertPow("3"); return; }
     const mapped = keyMap[k] !== undefined ? keyMap[k] : k;
     if (mapped !== null) pressKey(mapped);
   };
+
+  // ⇧ cycles keypad layers. Tap toggles basic ↔ 2nd (a tap while on 3rd returns
+  // to basic); a long-press jumps to the rarely-used 3rd layer.
+  const shiftHold = useRef({ t: null, long: false });
+  const shiftDown = (e) => { e.preventDefault(); shiftHold.current.long = false; shiftHold.current.t = setTimeout(() => { shiftHold.current.long = true; setLayer(2); }, 450); };
+  const shiftUp = () => { clearTimeout(shiftHold.current.t); if (!shiftHold.current.long) setLayer(l => (l === 0 ? 1 : 0)); };
+  const shiftCancel = () => { clearTimeout(shiftHold.current.t); };
 
   const getKeyStyle = (k) => {
     const base = { border:"none",borderRadius:10,cursor:"pointer",fontFamily:"'DM Mono',monospace",fontSize:15,fontWeight:600,display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.1s",padding:0,minHeight:46 };
@@ -593,6 +624,7 @@ export default function Kalculator() {
     if ("÷×−+^%!".includes(k)) return{...base,background:"rgba(244,114,182,0.12)",color:"#f472b6",border:"1px solid rgba(244,114,182,0.15)"};
     if (k==="⇧") return{...base,fontSize:13,background:layer?"rgba(96,165,250,0.2)":"rgba(255,255,255,0.06)",color:layer?"#60a5fa":"#aaa",border:layer?"1px solid rgba(96,165,250,0.3)":"1px solid rgba(255,255,255,0.08)"};
     if (/^[0-9.]$/.test(k)) return{...base,background:"rgba(255,255,255,0.08)",color:"#fff",border:"1px solid rgba(255,255,255,0.06)"};
+    if (k==="sqrt"||k==="cbrt") return{...base,background:"rgba(255,255,255,0.04)",color:"#ddd",fontSize:16,fontFamily:"Cambria,Georgia,'Times New Roman',serif",border:"1px solid rgba(255,255,255,0.06)"};
     return{...base,background:"rgba(255,255,255,0.04)",color:"#ccc",fontSize:12,border:"1px solid rgba(255,255,255,0.06)"};
   };
 
@@ -711,12 +743,15 @@ export default function Kalculator() {
         )}
 
         {/* Sci keys */}
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:5,padding:"4px 12px",flexShrink:0}}>
-          {mainKeys.flat().map((k,i)=><button key={k+i} onClick={()=>handleBtnPress(k)} style={getKeyStyle(k)}>{k==="⇧"?["⇧","2nd","ƒ"][layer]:k}</button>)}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5,padding:"4px 12px",flexShrink:0}}>
+          {mainKeys.flat().map((k,i)=> k==="⇧"
+            ? <button key={k+i} onPointerDown={shiftDown} onPointerUp={shiftUp} onPointerLeave={shiftCancel} onContextMenu={(e)=>e.preventDefault()} style={getKeyStyle(k)}>{["⇧","2nd","3rd"][layer]}</button>
+            : <button key={k+i} onClick={()=>handleBtnPress(k)} style={getKeyStyle(k)}>{KEY_LABEL[k]??k}</button>
+          )}
         </div>
         {/* Num keys */}
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:5,padding:"4px 12px 16px",flexShrink:0}}>
-          {numKeys.flat().map((k,i)=><button key={k+i} onClick={()=>handleBtnPress(k)} style={getKeyStyle(k)}>{k}</button>)}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5,padding:"4px 12px 16px",flexShrink:0}}>
+          {numKeys.flat().map((k,i)=><button key={k+i} onClick={()=>handleBtnPress(k)} style={getKeyStyle(k)}>{KEY_LABEL[k]??k}</button>)}
         </div>
       </>) : mode==="base" ? <BasePanel/> : mode==="units" ? <UnitPanel/> : mode==="fx" ? <CurrencyPanel/> : null}
 

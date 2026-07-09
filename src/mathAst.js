@@ -43,6 +43,7 @@ const MATHJS_FN_MAP = {
   ln: "log", log: "log10",
   nCr: "combinations", nPr: "permutations", // multi-arg combinatorics
   logb: "log", // log(x, base): math.js `log` is base-aware with 2 args (single-arg `log` → log10 above)
+  E: "e", // the "E" key: scientific notation in a number literal (1.5E3 stays intact); a lone E → Euler's number
 };
 
 // Translate a flat toExpr() string (app dialect) into a math.js expression:

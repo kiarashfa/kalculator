@@ -14,12 +14,15 @@ import {
   sinDependencies, cosDependencies, tanDependencies,
   asinDependencies, acosDependencies, atanDependencies,
   sinhDependencies, coshDependencies, tanhDependencies,
+  cotDependencies, secDependencies, cothDependencies, sechDependencies,
+  acotDependencies, asecDependencies,
+  asinhDependencies, acoshDependencies, atanhDependencies, acothDependencies, asechDependencies,
   ceilDependencies, floorDependencies, roundDependencies,
   complexDependencies, iDependencies, piDependencies, eDependencies,
   fractionDependencies,
   gcdDependencies, lcmDependencies, minDependencies, maxDependencies,
   combinationsDependencies, permutationsDependencies, modDependencies,
-  meanDependencies, medianDependencies, stdDependencies, varianceDependencies, sumDependencies,
+  meanDependencies, medianDependencies, stdDependencies, varianceDependencies, sumDependencies, modeDependencies,
 } from "mathjs";
 
 export const math = create(
@@ -32,11 +35,14 @@ export const math = create(
     ...sinDependencies, ...cosDependencies, ...tanDependencies,
     ...asinDependencies, ...acosDependencies, ...atanDependencies,
     ...sinhDependencies, ...coshDependencies, ...tanhDependencies,
+    ...cotDependencies, ...secDependencies, ...cothDependencies, ...sechDependencies,
+    ...acotDependencies, ...asecDependencies,
+    ...asinhDependencies, ...acoshDependencies, ...atanhDependencies, ...acothDependencies, ...asechDependencies,
     ...ceilDependencies, ...floorDependencies, ...roundDependencies,
     ...complexDependencies, ...iDependencies, ...piDependencies, ...eDependencies,
     ...gcdDependencies, ...lcmDependencies, ...minDependencies, ...maxDependencies,
     ...combinationsDependencies, ...permutationsDependencies, ...modDependencies,
-    ...meanDependencies, ...medianDependencies, ...stdDependencies, ...varianceDependencies, ...sumDependencies,
+    ...meanDependencies, ...medianDependencies, ...stdDependencies, ...varianceDependencies, ...sumDependencies, ...modeDependencies,
   },
   { number: "number" },
 );

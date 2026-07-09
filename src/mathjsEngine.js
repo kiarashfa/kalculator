@@ -66,6 +66,12 @@ export function createMathEngine(math, mathFrac) {
       if (!isFinite(r)) return { kind: "infinite", value: r, display: r > 0 ? "∞" : "-∞" };
       return { kind: "real", value: r, display: fmt(r) };
     }
+    if (t === "Array" || t === "Matrix") {
+      // Some functions (e.g. mode) return a set of values → show them comma-joined.
+      const arr = t === "Matrix" ? r.toArray() : r;
+      const nums = arr.map(coerceReal).filter((v) => v !== null);
+      if (nums.length) return { kind: "real", value: nums[0], display: nums.map(fmt).join(", ") };
+    }
     return { kind: "error" };
   }
 
