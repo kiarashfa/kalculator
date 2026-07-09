@@ -3,7 +3,7 @@
 // loads resolve to [] and saves are silent no-ops, so the app works regardless.
 // History entries are plain serializable objects ({expr, result, fraction?,
 // type, showDecimal?}) — structured-cloneable, no class instances.
-const DB_NAME = "handycalc";
+const DB_NAME = "kalculator";
 const STORE = "kv";
 const KEY = "history";
 const MAX = 200; // cap persisted entries so storage can't grow unbounded

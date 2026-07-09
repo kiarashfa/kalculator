@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import HandyCalc from './HandyCalc.jsx'
+import Kalculator from './Kalculator.jsx'
 
 // Top-level error boundary: a bad render (e.g. a malformed AST state) would
 // otherwise white-screen the whole app. Catch it and offer a Reset, which
-// remounts HandyCalc with fresh state (equivalent to AC + clear history).
+// remounts Kalculator with fresh state (equivalent to AC + clear history).
 class ErrorBoundary extends React.Component {
   constructor(props) { super(props); this.state = { error: null, key: 0 }; }
   static getDerivedStateFromError(error) { return { error }; }
-  componentDidCatch(error, info) { console.error('handyCalc crashed:', error, info); }
+  componentDidCatch(error, info) { console.error('Kalculator crashed:', error, info); }
   reset = () => this.setState((s) => ({ error: null, key: s.key + 1 }));
   render() {
     if (this.state.error) {
@@ -21,7 +21,7 @@ class ErrorBoundary extends React.Component {
         </div>
       );
     }
-    return <HandyCalc key={this.state.key} />;
+    return <Kalculator key={this.state.key} />;
   }
 }
 

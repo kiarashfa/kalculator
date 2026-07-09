@@ -1,6 +1,6 @@
 {
-  "name": "handyCalc",
-  "short_name": "handyCalc",
+  "name": "Kalculator",
+  "short_name": "Kalculator",
   "description": "Smart scientific calculator — natural math rendering, equation solver, graphing, unit & currency converters.",
   "start_url": ".",
   "scope": ".",

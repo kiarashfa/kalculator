@@ -1,9 +1,9 @@
-// Curated math.js instance: include only the functions handyCalc can actually
+// Curated math.js instance: include only the functions Kalculator can actually
 // produce (keypad buttons + parser), so the bundler tree-shakes everything else
 // (units, simplify, derivative, matrices, BigNumber, statistics, …). The full
 // `import * as mathjs` pulls the entire library; this keeps `evaluate` / `compile`
 // / `typeOf` fully working for every reachable expression. Injected into
-// createMathEngine() in HandyCalc.jsx. Verified against the full expression set.
+// createMathEngine() in Kalculator.jsx. Verified against the full expression set.
 import {
   create,
   evaluateDependencies, compileDependencies, typeOfDependencies,

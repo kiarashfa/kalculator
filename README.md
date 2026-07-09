@@ -1,4 +1,4 @@
-# handyCalc
+# Kalculator
 
 **Kalculator** (from *Kia* + *calculator*) is a smart, all-in-one calculator that does more than crunch numbers.
 

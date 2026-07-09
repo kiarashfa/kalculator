@@ -1,9 +1,9 @@
-// handyCalc service worker — runtime caching for offline use.
+// Kalculator service worker — runtime caching for offline use.
 // Strategy: stale-while-revalidate for same-origin GET requests. After the
 // first online visit, the app shell + hashed assets are cached, so it launches
 // and works fully offline. Cross-origin requests (e.g. Google Fonts) are not
 // cached — the CSS font stacks fall back to system fonts offline.
-const CACHE = "handycalc-v1";
+const CACHE = "kalculator-v1";
 
 self.addEventListener("install", () => self.skipWaiting());
 

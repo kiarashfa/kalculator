@@ -276,7 +276,7 @@ function HelpOverlay({ onClose }) {
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════════════════════════════════════
-export default function HandyCalc() {
+export default function Kalculator() {
   // Use refs for cursor so mutations always see current values
   const [ast, setAst] = useState(() => mkSeq());
   const [cursorSeqId, _setCursorSeqId] = useState(() => ast.id);
@@ -597,7 +597,7 @@ export default function HandyCalc() {
   };
 
   return (
-    <div ref={containerRef} tabIndex={0} onKeyDown={handleKeyDown} className="hc-root"
+    <div ref={containerRef} tabIndex={0} onKeyDown={handleKeyDown} className="kalc-root"
       style={{ width:"100%",maxWidth:420,margin:"0 auto",display:"flex",flexDirection:"column",background:"#0a0a0f",color:"#fff",fontFamily:"'DM Mono',monospace",overflow:"hidden",outline:"none" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
       {showGraph && <GraphView expressions={graphExprs} onClose={()=>setShowGraph(false)} />}
@@ -606,8 +606,8 @@ export default function HandyCalc() {
       {/* Header */}
       <div style={{padding:"12px 16px 8px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <div style={{width:28,height:28,borderRadius:8,background:"linear-gradient(135deg,#f472b6,#8b5cf6)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#fff"}}>h</div>
-          <span style={{fontSize:14,fontWeight:600,color:"#eee",fontFamily:"'Space Grotesk',sans-serif"}}>handyCalc</span>
+          <div style={{width:28,height:28,borderRadius:8,background:"linear-gradient(135deg,#f472b6,#8b5cf6)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#fff"}}>K</div>
+          <span style={{fontSize:14,fontWeight:600,color:"#eee",fontFamily:"'Space Grotesk',sans-serif"}}>Kalculator</span>
           <button onClick={()=>setShowHelp(true)} title="Shortcuts & tips" style={{width:18,height:18,borderRadius:"50%",border:"1px solid rgba(255,255,255,0.15)",background:"transparent",color:"#888",fontSize:11,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1,padding:0}}>?</button>
         </div>
         <div style={{display:"flex",gap:3,flexWrap:"wrap",justifyContent:"flex-end"}}>
@@ -721,7 +721,7 @@ export default function HandyCalc() {
       </>) : mode==="base" ? <BasePanel/> : mode==="units" ? <UnitPanel/> : mode==="fx" ? <CurrencyPanel/> : null}
 
       <style>{`
-        .hc-root{height:100vh;height:100dvh;}/* dvh avoids mobile keypad clipping; vh is the fallback */
+        .kalc-root{height:100vh;height:100dvh;}/* dvh avoids mobile keypad clipping; vh is the fallback */
         @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
         @keyframes cursorBlink{0%,100%{opacity:1;}50%{opacity:0;}}
         button:active{transform:scale(0.95)!important;opacity:0.8;}
