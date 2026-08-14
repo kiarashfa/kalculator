@@ -6,6 +6,8 @@ Type expressions and watch them render as natural, readable math. Solve equation
 
 ---
 
-© 2026 Kiarash Farajzadehahary
+© 2026 Kiarash Farajzadehahary.
+
+⚖ Licensed under the [KFA Source-Available License 1.0](LICENSE).
 
 Made with ❤️ for everyone who counts.
